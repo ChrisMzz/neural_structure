@@ -1,10 +1,12 @@
 
-
 class DataPoint:
     def __init__(self, inputs, outputs) -> None:
         self.inputs = inputs
         self.outputs = outputs
         # how to make data ?
+
+    def __str__(self):
+        return f"{self.inputs}\n{self.outputs}"
 
 
 class NeuralNetwork:

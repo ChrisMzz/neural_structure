@@ -41,32 +41,40 @@ def extract(iter, pos):
 # ----------------------------------------------------------------------------
 
 
-network = nr.NeuralNetwork([2,3,2])
+def generate_plants(N, rule):
+    x = []
+    y = []
+    outputs = []
+    for i in range(N+1):
+        x += [np.random.randint(1,100)/10]
+        y += [np.random.randint(1,100)/10]
+        if rule(x[-1],y[-1]):
+            outputs += ["Toxic"]
+        else:
+            outputs += ["Safe"]
+    inputs = x,y
+    return inputs, outputs
 
+
+
+network = nr.NeuralNetwork([2,3,2])
 
 N = 100
 states_colors = {"Safe":(0,0,1), "Toxic":(1,0,0)}
 
 fig, ax = plt.subplots()
 
-x = []
-y = []
-states = []
-for i in range(N+1):
-    x += [np.random.randint(1,100)/10]
-    y += [np.random.randint(1,100)/10]
-    print((x[-1]+y[-1]))
-    if (x[-1]+y[-1]) > 10:
-        states += ["Toxic"]
-    else:
-        states += ["Safe"]
+rule = lambda x,y : 1 if (x+y) > 10 else 0
 
 
-plants = get_in_from_ou((x,y),states)
+plants = generate_plants(N,rule)
+plants = get_in_from_ou(plants[0], plants[1])
 
 
 for state in plants.keys():
-    print(plants[state])
+    for plant in plants[state]:
+        dpoint = nr.DataPoint(plant, state)
+        print(f"{dpoint}\n")
     ax.plot(extract(plants[state], 0), extract(plants[state], 1), "o", color=states_colors[state], label=state)
 
 plt.legend()

@@ -9,4 +9,3 @@ Most of this network (this early version at least) is heavily based on Sebastian
 ---
 
 will be updating in the future.
-test to see if i can edit from other computers
