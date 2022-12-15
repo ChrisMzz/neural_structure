@@ -49,9 +49,9 @@ def generate_plants(N, rule):
         x += [np.random.randint(1,100)/10]
         y += [np.random.randint(1,100)/10]
         if rule(x[-1],y[-1]):
-            outputs += ["Toxic"]
+            outputs += [(0,1)]
         else:
-            outputs += ["Safe"]
+            outputs += [(1,0)]
     inputs = x,y
     return inputs, outputs
 
@@ -60,11 +60,12 @@ def generate_plants(N, rule):
 network = nr.NeuralNetwork([2,3,2])
 
 N = 100
-states_colors = {"Safe":(0,0,1), "Toxic":(1,0,0)}
+states_names = {(1,0):"Safe", (0,1):"Toxic"}
+states_colors = {(1,0):(0,0,1), (0,1):(1,0,0)}
 
 fig, ax = plt.subplots()
 
-rule = lambda x,y : 1 if (x+y) > 10 else 0
+rule = lambda x,y : 1 if (x+1.5*y) > 10 else 0
 
 
 plants = generate_plants(N,rule)
@@ -75,7 +76,7 @@ for state in plants.keys():
     for plant in plants[state]:
         dpoint = nr.DataPoint(plant, state)
         print(f"{dpoint}\n")
-    ax.plot(extract(plants[state], 0), extract(plants[state], 1), "o", color=states_colors[state], label=state)
+    ax.plot(extract(plants[state], 0), extract(plants[state], 1), "o", color=states_colors[state], label=states_names[state])
 
 plt.legend()
 plt.show()
